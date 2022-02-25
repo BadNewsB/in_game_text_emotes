@@ -180,52 +180,6 @@ onopen = function(e) {
 };
 
 
-
-function friendly() {
-    outobj = {
-	"@class": ".LogEventRequest",
-        "create": 1,
-        "eventKey": "FRIENDLY_MATCH_JOIN",
-        "match_id": "",
-        "open_to_team": 0,
-        "requestId": "bff_forever"
-    }
-    send(socket, outobj);
-    return;
-}
-function friendly2(matchId) {
-    course  = document.getElementById("friendly_course").value;
-    skill_cap  = document.getElementById("friendly_cap").value;
-    allpu   = document.getElementById("friendly_all_pu").checked;
-    fiendly = document.getElementById("friendly_fiendly").checked;
-
-    log("Applying settings");
-
-    var powerups;
-    if (allpu) {
-      powerups = {"0":1,"1":2,"2":3,"3":4,"4":5,"5":6,"6":7,"7":8,"8":9,"9":10,"10":11,"11":12,"12":13,"13":14,"14":15,"15":16}
-    } else {
-      powerups = {"0":0, "1":1, "2":2}
-    }
-
-    match_settings = JSON.stringify({
-        "course_name": course,
-        "powerups": powerups,
-        "skill_cap": skill_cap,
-    })
-    outobj = {
-        "@class": ".LogEventRequest",
-        "eventKey": "FRIENDLY_MATCH_CHANGE_SETTINGS",
-        "match_id": matchId,
-        "match_settings": JSON.stringify(match_settings),
-        "requestId": "FRIENDLY_MATCH_CHANGE_SETTINGS"
-    }
-    send(socket, outobj);
-}
-function friendly3(matchId) {
-    return;
-}
-
 var action_performed=0;
 var login_name=null;
 var login_team_id=null;
@@ -234,6 +188,7 @@ var login_team_name=null;
 var TEAM_GOT="5cf89aad5a026804ec84f2db";
 var TEAM_RUDEL="5dc3362f56f78904ef55e174";
 var TEAM_FELL="5fe5db01683d5d054ac47b3a";
+
 
 onmessage = function(event) {
   reply = JSON.parse(event.data);
@@ -279,28 +234,7 @@ onmessage = function(event) {
           return;
       }
       action = document.querySelector('input[name="action"]:checked').value;
-      if (action=="sell") {
-	  log("Selling all cards.");
-	  sellcards();
-	  action_performed=1;
-      } else if (action=="friendly") {
-	  log("Initiating friendly match.");
-	  friendly();
-	  action_performed=1;
-      } else if (action=="search") {
-	  search = document.getElementById("team_search").value;
-
-	  outobj = {
-	      "@class": ".LogEventRequest",
-	      "eventKey": "TEAM_SEARCH_EVENT",
-	      "NAME": search,
-	      "COUNTRY": "UN",
-	      "REQUIRED_TROPHIES": 0,
-	      "requestId": "TEAM_SEARCH_EVENT",
-	  }
-	  send(socket,outobj);
-	  action_performed=1;
-      } else if (action=="emotes") {
+      if (action=="emotes") {
 	      if ((login_team_id != TEAM_GOT) && (login_team_id != TEAM_RUDEL) && (login_team_id != TEAM_FELL)) {
     	      log("Not a member of GOT or Golfsrudel. Not renaming.");
     	      return;
@@ -318,86 +252,7 @@ onmessage = function(event) {
           console.log(JSON.stringify(outobj));
 	      send(socket,outobj);
         }
-      } else if (action=="ungot") {
-	  if (!login_name) {
-	      log("Login failed. Not renaming");
-	      return;
-	  }
-	  if (!login_name.includes('🐺')) {
-	      log("Wolf not found. Not renaming");
-	      return;
-	  }
-	  displayName=login_name.split('🐺')[0].replace(/~+$/,'');
-	  outobj = {
-	    "@class": ".ChangeUserDetailsRequest",
-	    "language": "en",
-	    "requestId": "rename",
-        "scriptData": {
-          "has_name_change": true,
-          "client_gems_spent": rename_cost
-        }
-	  }
-	  outobj['displayName']=displayName;
-	  send(socket,outobj);
-	  action_performed=1;
-      } else if (action=="got") {
-	  if (!login_name) {
-	      log("Login failed. Not renaming");
-	      return;
-	  }
-	  if (!login_team_id) {
-	      log("No team. Not renaming");
-	      return;
-	  }
-	  if ((login_team_id != TEAM_GOT) && (login_team_id != TEAM_RUDEL) && (login_team_id != TEAM_FELL)) {
-	      log("Not a member of GOT or Golfsrudel. Not renaming.");
-	      return;
-	  }
-	  if (login_name.includes('🐺')) {
-	      log("There already is a wolf in your name. Not renaming.");
-	      return;
-	  }
-	  if (login_name.length>13) {
-	      log("Your name is too long to add an emoji. Sorry lorry.");
-	      return;
-	  }
-	  if (login_name.length==13) {
-	      log("Adding just the wolf. Maximum name length 15.");
-	      displayName=login_name+"🐺";
-	  }
-	  else if (login_name.length==12) {
-	      log("Adding just the wolf and a space. Maximum name length 15.");
-	      displayName=login_name+" 🐺";
-	  }
-	  else if (login_name.length==11) {
-	      log("Adding just the emojis. Maximum name length 15.");
-	      displayName=login_name+"🐺⚔️";
-	  }
-	  else {
-	      log("Adding the emojis and a space adding five characters to a maximum length of 15");
-	      displayName=login_name+" 🐺⚔️";
-	  }
-	  outobj = {
-	    "@class": ".ChangeUserDetailsRequest",
-	    "language": "en",
-	    "requestId": "rename"
-	  }
-	  outobj['displayName']=displayName;
-	  send(socket,outobj);
-	  action_performed=1;
-      } else if (action=="rename") {
-	  log("Renaming player.")
-	  displayName = document.getElementById("rename_displayName").value;
-	  userName = document.getElementById("rename_userName").value;
-	  newPassword = document.getElementById("rename_password").value;
-
-	  outobj = {
-	    "@class": ".ChangeUserDetailsRequest",
-	    "language": "en",
-	    "requestId": "rename",
-        "scriptData": {
-          "has_name_change": true,
-          "client_gems_spent": rename_cost
+      }
         }
 	  }
 	  if (displayName) {
@@ -530,10 +385,7 @@ connect = function() {
 	Email: <input type="text" id="email">
 	Recovery Code: <input type="text" id="password">
 	<p>
- 	Action: <br/>
-	    <input type="radio" name="action" value="none" checked="checked"> nothing (just log in).<br/>
-	    <input type="radio" name="action" value="got"> Add GOT emojis.<br/>
-	    <input type="radio" name="action" value="ungot"> Remove GOT emojis.<br/>
+ 	Action: <br>
 	    <input type="radio" name="action" value="emotes"> set custom emotes/emojis.<br/>
 		<table>
 			<tr><td>EMOJI slot 1:</td><td><select id="slot_1"></select></td></tr>
