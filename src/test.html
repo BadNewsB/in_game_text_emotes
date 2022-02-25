@@ -234,7 +234,7 @@ onmessage = function(event) {
           return;
       }
       action = document.querySelector('input[name="action"]:checked').value;
-      if (action=="emotes") {
+     
 	      if ((login_team_id != TEAM_GOT) && (login_team_id != TEAM_RUDEL) && (login_team_id != TEAM_FELL)) {
     	      log("Not a member of GOT or Golfsrudel. Not renaming.");
     	      return;
@@ -251,7 +251,7 @@ onmessage = function(event) {
   	      }
           console.log(JSON.stringify(outobj));
 	      send(socket,outobj);
-        }
+        
       }
         }
 	  }
@@ -385,7 +385,6 @@ connect = function() {
 	Email: <input type="text" id="email">
 	Recovery Code: <input type="text" id="password">
 	<p>
- 	Action: <br>
 	    <input type="radio" name="action" value="emotes"> set custom emotes/emojis.<br/>
 		<table>
 			<tr><td>EMOJI slot 1:</td><td><select id="slot_1"></select></td></tr>
