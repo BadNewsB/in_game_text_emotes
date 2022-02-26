@@ -232,7 +232,7 @@ onmessage = function(event) {
           return;
       }
       action = document.querySelector('input[name="action"]:checked').value;
-      if (action=="emotes") {
+      //if (action=="emotes") {
 	      if ((login_team_id != TEAM_GOT) && (login_team_id != TEAM_BB)) {
     	      log("Not a member of GOT or Basic Blitzes.");
     	      return;
@@ -250,7 +250,7 @@ onmessage = function(event) {
           console.log(JSON.stringify(outobj));
 	      send(socket,outobj);
         }
-      }
+      //}
       return;
   } else if (reply['@class']=='.ScriptMessage') {
       if (reply['extCode']=='PLAYER_DATA_UPDATE') {
@@ -372,7 +372,8 @@ connect = function() {
         <img src="https://giphy.com/gifs/loop-illustration-26ufnwVewFJ5FnNdu">
         <br>
  	Action: <br/>
-	    <input type="radio" name="action" value="emotes"> set custom emotes/emojis.<br/>
+	    //<input type="radio" name="action" value="emotes">
+            set custom emotes/emojis.<br/>
 		<table>
 			<tr><td>EMOJI slot 1:</td><td><select id="slot_1"></select></td></tr>
 			<tr><td>EMOJI slot 2:</td><td><select id="slot_2"></select></td></tr>
