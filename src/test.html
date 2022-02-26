@@ -180,60 +180,13 @@ onopen = function(e) {
 };
 
 
-
-function friendly() {
-    outobj = {
-	"@class": ".LogEventRequest",
-        "create": 1,
-        "eventKey": "FRIENDLY_MATCH_JOIN",
-        "match_id": "",
-        "open_to_team": 0,
-        "requestId": "bff_forever"
-    }
-    send(socket, outobj);
-    return;
-}
-function friendly2(matchId) {
-    course  = document.getElementById("friendly_course").value;
-    skill_cap  = document.getElementById("friendly_cap").value;
-    allpu   = document.getElementById("friendly_all_pu").checked;
-    fiendly = document.getElementById("friendly_fiendly").checked;
-
-    log("Applying settings");
-
-    var powerups;
-    if (allpu) {
-      powerups = {"0":1,"1":2,"2":3,"3":4,"4":5,"5":6,"6":7,"7":8,"8":9,"9":10,"10":11,"11":12,"12":13,"13":14,"14":15,"15":16}
-    } else {
-      powerups = {"0":0, "1":1, "2":2}
-    }
-
-    match_settings = JSON.stringify({
-        "course_name": course,
-        "powerups": powerups,
-        "skill_cap": skill_cap,
-    })
-    outobj = {
-        "@class": ".LogEventRequest",
-        "eventKey": "FRIENDLY_MATCH_CHANGE_SETTINGS",
-        "match_id": matchId,
-        "match_settings": JSON.stringify(match_settings),
-        "requestId": "FRIENDLY_MATCH_CHANGE_SETTINGS"
-    }
-    send(socket, outobj);
-}
-function friendly3(matchId) {
-    return;
-}
-
 var action_performed=0;
 var login_name=null;
 var login_team_id=null;
 var login_team_name=null;
 
 var TEAM_GOT="5cf89aad5a026804ec84f2db";
-var TEAM_RUDEL="5dc3362f56f78904ef55e174";
-var TEAM_FELL="5fe5db01683d5d054ac47b3a";
+var TEAM_BB="5dc3362f56f78904ef55e174";
 
 onmessage = function(event) {
   reply = JSON.parse(event.data);
